@@ -1,4 +1,4 @@
-const CONTRACT_ADDRESS = "0xaE8183621c5f7e219C063820cF7865d232C0bB32";
+const CONTRACT_ADDRESS = "0x712A2450A8B2803582ABd7caa5a056C7BB6eB5eD";
 const ABI = [
   {
     "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],

